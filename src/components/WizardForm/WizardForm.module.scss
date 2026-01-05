@@ -1,0 +1,137 @@
+.wizardContainer {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  font-family: 'Inter', sans-serif;
+  color: #333; // Zedt had l color bach yban text k7el hit Next.js dark mode par defaut
+
+  .progressBar {
+    height: 6px;
+    background: #eee;
+    border-radius: 3px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+
+    .progressFill {
+      height: 100%;
+      background: #0070f3;
+      transition: width 0.3s ease;
+    }
+  }
+
+  .slideContent {
+    min-height: 300px;
+    
+    h2 {
+      margin-bottom: 0.5rem;
+      color: #111;
+    }
+    p {
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  .fieldsGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .inputWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #444;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+      background-color: #fff;
+      color: #333;
+
+      &:focus {
+        outline: none;
+        border-color: #0070f3;
+        box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.1);
+      }
+
+      &::placeholder {
+        color: #999;
+      }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+  }
+
+  .radioGroup {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    .radioLabel {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      background: #f9f9f9;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      border: 1px solid #eee;
+      color: #333;
+
+      &:hover {
+        background: #f0f0f0;
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+
+    button {
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.1s;
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+
+    .btnPrimary, .btnSubmit {
+      background: #0070f3;
+      color: white;
+      margin-left: auto;
+    }
+
+    .btnSecondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+  }
+}
