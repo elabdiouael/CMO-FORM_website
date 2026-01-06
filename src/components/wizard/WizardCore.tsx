@@ -34,39 +34,48 @@ export default function WizardCore() {
   const next = () => step < wizardConfig.length && setStep(s => s + 1);
   const prev = () => step > 0 && setStep(s => s - 1);
 
-  // --- PAGECLIP INTEGRATION ---
+  // --- SUBMISSION LOGIC (CORRECTED) ---
   const handleSubmit = async () => {
     setSending(true);
     
-    // 👇 Lien dyal Pageclip mn screenshot dyalk
-    const PAGECLIP_URL = "https://send.pageclip.co/cMmvHtrwAIU4nrjwl8Y5G8k7Eg34F89f";
+    // 1. URL S7i7a (m3a smiyat l-form '/cmo')
+    const BASE_URL = "https://send.pageclip.co/cMmvHtrwAIU4nrjwl8Y5G8k7Eg34F89f";
+    const TARGET_URL = `${BASE_URL}/cmo`;
+
+    // 2. Préparation d l-FormData (Katduz 7ssen mn JSON f reseau)
+    const body = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      body.append(key, value as string);
+    });
+    // Zid date
+    body.append("submittedAt", new Date().toLocaleString());
 
     try {
-      const response = await fetch(PAGECLIP_URL, {
+      // Mohim: Bla headers "Content-Type", browser kaydirhom rasso m3a FormData
+      const response = await fetch(TARGET_URL, {
         method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          // Parfois Pageclip kaybtghi had header bach ya3ref rah JSON
-          "X-REQ-METHOD": "json" 
-        },
-        body: JSON.stringify({
-          ...formData,
-          submittedAt: new Date().toLocaleString()
-        })
+        body: body,
       });
 
       if (response.ok) {
-        // Success Animation Delay
+        // Success: Drebha b wa7ed 2 secondes dyl suspense 3ad daz
         setTimeout(() => { 
           setSending(false); 
           next(); 
         }, 1500);
       } else {
-        throw new Error("Failed to send");
+        // Fallback: Ila ma daztch b '/cmo', jreb URL l-assliya
+        console.warn("Retrying base URL...");
+        const retry = await fetch(BASE_URL, { method: "POST", body: body });
+        if(retry.ok) {
+           setTimeout(() => { setSending(false); next(); }, 1500);
+        } else {
+           throw new Error("Failed to send");
+        }
       }
     } catch (error) {
       console.error(error);
-      alert("Erreur de connexion. Jreb mrra khra.");
+      alert("Erreur de connexion. Jreb mrra khra (Check Console).");
       setSending(false);
     }
   };
@@ -89,7 +98,6 @@ export default function WizardCore() {
   // --- 2. MAIN WIZARD ---
   return (
     <GalaxyBackground>
-      {/* Hna kan-passiw variant bach tbdel l-couleur */}
       <HoloCard variant={currentVariant}>
         
         {/* Progress Bar */}
