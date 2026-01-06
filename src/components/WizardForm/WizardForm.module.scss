@@ -1,137 +1,232 @@
+/* src/components/WizardForm/WizardForm.module.scss */
+
+// --- 2080 Design Palette ---
+$accent-color: #08fdd8; // Neon Teal/Cyan - Loun dyal l'énergie
+$glow-color: rgba(8, 253, 216, 0.2);
+$text-primary: #f0f0f0;
+$text-secondary: #a3a3a3;
+
+// --- NEW: Nebula Background Animation ---
+@keyframes moveNebula {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(15vw, -20vh); }
+  50% { transform: translate(-10vw, 15vh); }
+  75% { transform: translate(20vw, 10vh); }
+  100% { transform: translate(0, 0); }
+}
+
+.cinematicWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  // L'effet Nebula kayn hna
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    width: 80vmax;
+    height: 80vmax;
+    border-radius: 50%;
+    filter: blur(100px);
+    will-change: transform;
+    z-index: -1;
+  }
+
+  &::before {
+    background: radial-gradient(circle, rgba(131, 58, 180, 0.2), transparent 60%);
+    top: -20%;
+    left: -20%;
+    animation: moveNebula 40s infinite linear alternate;
+  }
+  &::after {
+    background: radial-gradient(circle, rgba(8, 253, 216, 0.15), transparent 60%);
+    bottom: -20%;
+    right: -20%;
+    animation: moveNebula 35s infinite linear alternate-reverse;
+  }
+}
+
 .wizardContainer {
-  max-width: 600px;
-  margin: 2rem auto;
-  background: #fff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  font-family: 'Inter', sans-serif;
-  color: #333; // Zedt had l color bach yban text k7el hit Next.js dark mode par defaut
+  width: 100%;
+  max-width: 650px;
+  // Kay7eyed ayi style dyal l'cader
+}
 
-  .progressBar {
-    height: 6px;
-    background: #eee;
-    border-radius: 3px;
-    margin-bottom: 2rem;
+// --- NEW: Progress Pips (HUD Style) ---
+.progressPips {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+
+  .pip {
+    width: 30px;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    transition: background-color 0.5s ease;
+
+    &.active {
+      background-color: $accent-color;
+    }
+  }
+}
+
+.slideContent {
+  width: 100%;
+  // 3D transform style
+  transform-style: preserve-3d;
+
+  h2 {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: $text-primary;
+    text-shadow: 0 0 20px $glow-color;
+    letter-spacing: -2px;
+  }
+  p {
+    font-size: 1.25rem;
+    color: $text-secondary;
+    margin-bottom: 4rem;
+    max-width: 80%;
+  }
+}
+
+// --- NEW: Holographic Inputs ---
+.inputWrapper {
+  position: relative;
+  margin-bottom: 2.5rem;
+  
+  label { /* Labeled by placeholder */ }
+
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    color: $text-primary;
+    font-size: 1.5rem;
+    padding: 1rem 0;
+    transition: border-color 0.3s ease;
+    font-family: inherit;
+    resize: none;
+
+    &::placeholder {
+      color: $text-secondary;
+      opacity: 0.8;
+    }
+    &:focus {
+      outline: none;
+      border-color: $accent-color;
+    }
+  }
+}
+
+// --- NEW: Choice Panels (for Radio/Select) ---
+.choiceGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .choiceLabel {
+    display: block;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 1.5rem;
+    font-size: 1.2rem;
+    color: $text-secondary;
+    position: relative;
     overflow: hidden;
-
-    .progressFill {
-      height: 100%;
-      background: #0070f3;
-      transition: width 0.3s ease;
-    }
-  }
-
-  .slideContent {
-    min-height: 300px;
+    transition: color 0.3s ease, border-color 0.3s ease;
     
-    h2 {
-      margin-bottom: 0.5rem;
-      color: #111;
+    // L'effet dyal l'glow
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(circle at 50% 50%, $glow-color, transparent 70%);
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.4s ease-out;
     }
-    p {
-      color: #666;
-      margin-bottom: 1.5rem;
-    }
-  }
-
-  .fieldsGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .inputWrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-
-    label {
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: #444;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    select,
-    textarea {
-      padding: 0.8rem;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: border-color 0.2s;
-      background-color: #fff;
-      color: #333;
-
-      &:focus {
-        outline: none;
-        border-color: #0070f3;
-        box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.1);
-      }
-
-      &::placeholder {
-        color: #999;
-      }
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 100px;
-    }
-  }
-
-  .radioGroup {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-
-    .radioLabel {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
-      background: #f9f9f9;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      border: 1px solid #eee;
-      color: #333;
-
-      &:hover {
-        background: #f0f0f0;
+    
+    &:hover {
+      border-color: $accent-color;
+      color: $text-primary;
+      &::before {
+        opacity: 1;
+        transform: scale(1.5);
       }
     }
   }
 
-  .actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid #eee;
+  input[type="radio"] { display: none; }
+  
+  input[type="radio"]:checked + label {
+    border-color: $accent-color;
+    color: $text-primary;
+    background-color: rgba(8, 253, 216, 0.05);
+  }
+}
 
-    button {
-      padding: 0.8rem 1.5rem;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      transition: transform 0.1s;
+// --- NEW: Cinematic Actions ---
+.actions {
+  margin-top: 4rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 
-      &:active {
-        transform: scale(0.98);
-      }
+  button {
+    font-family: var(--font-space-grotesk);
+    font-size: 1rem;
+    font-weight: 500;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: $text-secondary;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+      border-color: $text-primary;
+      color: $text-primary;
     }
+    &:disabled { opacity: 0.4; cursor: not-allowed; }
+  }
 
-    .btnPrimary, .btnSubmit {
-      background: #0070f3;
-      color: white;
-      margin-left: auto;
-    }
+  .btnPrimary, .btnSubmit {
+    border-color: $accent-color;
+    background-color: $accent-color;
+    color: #000;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 
-    .btnSecondary {
-      background: #e0e0e0;
-      color: #333;
+    &:hover:not(:disabled) {
+      box-shadow: 0 0 30px $glow-color;
     }
+  }
+}
+
+// --- Success State ---
+.successState {
+  text-align: center;
+  h2 {
+    font-size: 3rem !important;
+  }
+  p {
+    font-size: 1.2rem !important;
+    max-width: 100% !important;
   }
 }
