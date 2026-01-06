@@ -1,4 +1,6 @@
+// src/components/wizard/WizardCore.tsx
 "use client";
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { wizardConfig } from "../../data/questions";
@@ -8,7 +10,7 @@ import TechInput from "../ui/TechInput";
 import CyberSelect from "../ui/CyberSelect";
 import styles from "./WizardCore.module.scss";
 
-// Array dyal variants (nfs smyat li f CSS)
+// Les styles dyal les cartes li kaytbedlo kola step
 const CARD_VARIANTS = ['holo', 'neon', 'crimson', 'void', 'synthwave'] as const;
 
 export default function WizardCore() {
@@ -17,12 +19,11 @@ export default function WizardCore() {
   const [started, setStarted] = useState(false);
   const [sending, setSending] = useState(false);
 
-  // Logic bach n-calculiw variant 3la 7ssab step
-  // Step 0 -> holo, Step 1 -> neon, etc. melli ysalio y3awdo mn lowl.
+  // Logic dyal Variant (Holo -> Neon -> Crimson...)
   const currentVariant = CARD_VARIANTS[step % CARD_VARIANTS.length];
-
   const currentSlide = wizardConfig[step];
   
+  // Handlers
   const handleChange = (name: string, val: string) => setFormData(p => ({ ...p, [name]: val }));
   
   const isValid = () => {
@@ -33,12 +34,44 @@ export default function WizardCore() {
   const next = () => step < wizardConfig.length && setStep(s => s + 1);
   const prev = () => step > 0 && setStep(s => s - 1);
 
+  // --- PAGECLIP INTEGRATION ---
   const handleSubmit = async () => {
     setSending(true);
-    // Hna dir fetch dyal l'email dyalk
-    setTimeout(() => { setSending(false); next(); }, 2000);
+    
+    // 👇 Lien dyal Pageclip mn screenshot dyalk
+    const PAGECLIP_URL = "https://send.pageclip.co/cMmvHtrwAIU4nrjwl8Y5G8k7Eg34F89f";
+
+    try {
+      const response = await fetch(PAGECLIP_URL, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          // Parfois Pageclip kaybtghi had header bach ya3ref rah JSON
+          "X-REQ-METHOD": "json" 
+        },
+        body: JSON.stringify({
+          ...formData,
+          submittedAt: new Date().toLocaleString()
+        })
+      });
+
+      if (response.ok) {
+        // Success Animation Delay
+        setTimeout(() => { 
+          setSending(false); 
+          next(); 
+        }, 1500);
+      } else {
+        throw new Error("Failed to send");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Erreur de connexion. Jreb mrra khra.");
+      setSending(false);
+    }
   };
 
+  // --- 1. INTRO SCREEN ---
   if(!started) {
     return (
       <GalaxyBackground>
@@ -53,24 +86,26 @@ export default function WizardCore() {
     );
   }
 
+  // --- 2. MAIN WIZARD ---
   return (
     <GalaxyBackground>
-      {/* Passina variant hna */}
+      {/* Hna kan-passiw variant bach tbdel l-couleur */}
       <HoloCard variant={currentVariant}>
         
-        {/* Progress Line */}
+        {/* Progress Bar */}
         <div className={styles.progress}>
-           <div className={styles.bar} style={{ width: `${((step)/wizardConfig.length)*100}%` }} />
+           <div className={styles.bar} style={{ width: `${((step + 1)/wizardConfig.length)*100}%` }} />
         </div>
 
         <AnimatePresence mode="wait">
           {step < wizardConfig.length ? (
             <motion.div
               key={step}
-              initial={{ opacity: 0, x: 50, filter: 'blur(10px)' }}
+              // Animation d'entrée : Flou -> Net + Glissement
+              initial={{ opacity: 0, x: 20, filter: 'blur(10px)' }}
               animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, x: -50, filter: 'blur(10px)' }}
-              transition={{ duration: 0.5, ease: "circOut" }}
+              exit={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
+              transition={{ duration: 0.4, ease: "circOut" }}
               className={styles.slide}
             >
               <div className={styles.header}>
@@ -82,14 +117,18 @@ export default function WizardCore() {
               <div className={styles.form}>
                 {currentSlide.fields.map(field => (
                   <div key={field.name}>
-                    {field.type === 'select' ? (
+                    {
+                    // --- SELECT CUSTOM ---
+                    field.type === 'select' ? (
                       <CyberSelect 
                         label={field.label}
                         options={field.options || []}
                         value={formData[field.name] || ''}
                         onChange={(val) => handleChange(field.name, val)}
                       />
-                    ) : field.type === 'radio' ? (
+                    ) : 
+                    // --- RADIO CUSTOM ---
+                    field.type === 'radio' ? (
                       <div className={styles.radioGroup}>
                          <label className={styles.radioLabel}>{field.label}</label>
                          <div className={styles.grid}>
@@ -99,7 +138,10 @@ export default function WizardCore() {
                                  className={`${styles.radioCard} ${formData[field.name] === opt ? styles.selected : ''}`}
                                  onClick={() => {
                                     handleChange(field.name, opt);
-                                    if(currentSlide.fields.length === 1 && !sending) setTimeout(next, 300);
+                                    // Auto-next ghir ila kan soal wa7d
+                                    if(currentSlide.fields.length === 1 && !sending) {
+                                      setTimeout(next, 400);
+                                    }
                                  }}
                                >
                                   {opt}
@@ -108,6 +150,7 @@ export default function WizardCore() {
                          </div>
                       </div>
                     ) : (
+                    // --- INPUTS TEXT/EMAIL ---
                       <TechInput 
                         label={field.label}
                         name={field.name}
@@ -122,6 +165,7 @@ export default function WizardCore() {
 
               <div className={styles.actions}>
                  <button onClick={prev} disabled={step === 0} className={styles.btnSec}>BACK</button>
+                 
                  {step === wizardConfig.length - 1 ? (
                     <button onClick={handleSubmit} disabled={!isValid() || sending} className={styles.btnPri}>
                       {sending ? 'UPLOADING...' : 'TRANSMIT DATA'}
@@ -132,9 +176,15 @@ export default function WizardCore() {
               </div>
             </motion.div>
           ) : (
+            // --- SUCCESS SCREEN ---
             <div className={styles.success}>
-               <h1>TRANSMISSION COMPLETE</h1>
-               <p>DATA SECURED IN THE CLOUD.</p>
+               <motion.div 
+                 initial={{ scale: 0.8, opacity: 0 }}
+                 animate={{ scale: 1, opacity: 1 }}
+               >
+                 <h1>TRANSMISSION COMPLETE</h1>
+                 <p>DATA SECURED IN THE CLOUD.</p>
+               </motion.div>
             </div>
           )}
         </AnimatePresence>
