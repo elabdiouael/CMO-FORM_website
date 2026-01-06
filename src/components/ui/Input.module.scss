@@ -1,0 +1,35 @@
+.group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .label {
+    color: #888;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 0;
+    color: #fff;
+    font-size: 1.2rem;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+    border-radius: 0;
+  
+    &:focus {
+      outline: none;
+      border-color: #08fdd8;
+    }
+  
+    &::placeholder {
+      color: #444;
+    }
+  }

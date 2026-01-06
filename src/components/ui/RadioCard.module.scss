@@ -1,0 +1,42 @@
+.card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.2rem;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+  
+    &.selected {
+      border-color: #08fdd8;
+      background: rgba(8, 253, 216, 0.05);
+      box-shadow: 0 0 20px rgba(8, 253, 216, 0.1);
+  
+      .indicator {
+        background: #08fdd8;
+        box-shadow: 0 0 10px #08fdd8;
+      }
+    }
+  }
+  
+  .indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+  }
+  
+  .text {
+    color: #f0f0f0;
+    font-weight: 500;
+    font-size: 1rem;
+  }
