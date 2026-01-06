@@ -7,6 +7,7 @@ export interface Field {
   type: FieldType;
   placeholder?: string;
   options?: string[];
+  required?: boolean; // Zedt hadi
 }
 
 export interface Slide {
@@ -23,24 +24,18 @@ export const wizardConfig: Slide[] = [
     title: "Identité & Profil",
     description: "Net3erfo 3lik chwiya 9bel ma nebda.",
     fields: [
-      { name: "email", label: "Adresse e-mail", type: "email", placeholder: "Ex: nom@gmail.com" },
-      { name: "fullName", label: "Nom complet", type: "text", placeholder: "Smiya w lknya" },
+      { name: "email", label: "Adresse e-mail", type: "email", placeholder: "Ex: nom@gmail.com", required: true },
+      { name: "fullName", label: "Nom complet", type: "text", placeholder: "Smiya w lknya", required: true },
       { 
-        name: "age", 
-        label: "Âge", 
-        type: "select", 
+        name: "age", label: "Âge", type: "select", required: true,
         options: ["Moins de 18 ans", "18–22 ans", "23–26 ans", "27 ans et plus"] 
       },
       { 
-        name: "status", 
-        label: "Statut actuel", 
-        type: "select", 
+        name: "status", label: "Statut actuel", type: "select", required: true,
         options: ["Étudiant(e)", "Jeune diplômé(e)", "Professionnel(le)", "Entrepreneur(e)", "Autre"] 
       },
       { 
-        name: "cmo_relation", 
-        label: "Votre lien avec le CMO48", 
-        type: "radio", 
+        name: "cmo_relation", label: "Votre lien avec le CMO48", type: "radio", required: true,
         options: ["Membre actif", "Ancien membre", "Intéressé(e)", "Partenaire potentiel"] 
       }
     ]
@@ -53,21 +48,11 @@ export const wizardConfig: Slide[] = [
     description: "Kifach katchouf l mosta9bal dyal le club?",
     fields: [
       { 
-        name: "vision_priority", 
-        label: "Le CMO48 doit prioritairement être :", 
-        type: "radio", 
-        options: [
-          "Club de formation pro", 
-          "Incubateur de projets", 
-          "Réseau de talents", 
-          "Acteur d’impact social", 
-          "Mix équilibré"
-        ] 
+        name: "vision_priority", label: "Le CMO48 doit prioritairement être :", type: "radio", required: true,
+        options: ["Club de formation pro", "Incubateur de projets", "Réseau de talents", "Acteur d’impact social", "Mix équilibré"] 
       },
       { 
-        name: "vision_clarity", 
-        label: "Clarté de la vision actuelle", 
-        type: "radio", 
+        name: "vision_clarity", label: "Clarté de la vision actuelle", type: "radio", required: true,
         options: ["Très claire", "Claire", "Moyennement claire", "Peu claire"] 
       }
     ]
@@ -80,19 +65,11 @@ export const wizardConfig: Slide[] = [
     description: "Chno hiya l'priorité numéro 1 3ndk?",
     fields: [
       { 
-        name: "strategic_priority", 
-        label: "Priorité stratégique principale", 
-        type: "select", 
+        name: "strategic_priority", label: "Priorité stratégique principale", type: "select", required: true,
         options: [
-          "Formations pratiques/certifiantes",
-          "Contenus en français",
-          "Accompagnement projets",
-          "Hackathons",
-          "Visites d’entreprises",
-          "Événements Tech/Business",
-          "Visibilité & Image",
-          "Activités sociales",
-          "Pôle juridique (Law)"
+          "Formations pratiques/certifiantes", "Contenus en français", "Accompagnement projets",
+          "Hackathons", "Visites d’entreprises", "Événements Tech/Business",
+          "Visibilité & Image", "Activités sociales", "Pôle juridique (Law)"
         ] 
       }
     ]
@@ -105,21 +82,15 @@ export const wizardConfig: Slide[] = [
     description: "Wach interessé b content b lfrançais?",
     fields: [
       { 
-        name: "fr_interest", 
-        label: "Niveau d’intérêt", 
-        type: "radio", 
+        name: "fr_interest", label: "Niveau d’intérêt", type: "radio", required: true,
         options: ["Très intéressé(e)", "Intéressé(e)", "Peu intéressé(e)", "Pas intéressé(e)"] 
       },
       { 
-        name: "fr_domain", 
-        label: "Domaine prioritaire", 
-        type: "select", 
+        name: "fr_domain", label: "Domaine prioritaire", type: "select", required: false, // Optional
         options: ["Communication pro", "Marketing & digital", "Business & entrep.", "Soft skills", "Autre"] 
       },
       { 
-        name: "fr_format", 
-        label: "Format préféré", 
-        type: "radio", 
+        name: "fr_format", label: "Format préféré", type: "radio", required: false, // Optional
         options: ["Présentiel", "En ligne", "Hybride"] 
       }
     ]
@@ -132,23 +103,11 @@ export const wizardConfig: Slide[] = [
     description: "Fach baghi tdevelopa?",
     fields: [
       { 
-        name: "training_topic", 
-        label: "Sujet prioritaire", 
-        type: "select", 
-        options: [
-          "Marketing digital & SEO",
-          "IA & No-code",
-          "Entrepreneuriat",
-          "Design & Content",
-          "Gestion de projet",
-          "Finance & Business Model",
-          "Dev personnel"
-        ] 
+        name: "training_topic", label: "Sujet prioritaire", type: "select", required: true,
+        options: ["Marketing digital & SEO", "IA & No-code", "Entrepreneuriat", "Design & Content", "Gestion de projet", "Finance & Business Model", "Dev personnel"] 
       },
       { 
-        name: "training_level", 
-        label: "Niveau souhaité", 
-        type: "radio", 
+        name: "training_level", label: "Niveau souhaité", type: "radio", required: true,
         options: ["Débutant", "Intermédiaire", "Avancé"] 
       }
     ]
@@ -161,22 +120,16 @@ export const wizardConfig: Slide[] = [
     description: "Wach 3ndk chi projet baghi tlncih?",
     fields: [
       { 
-        name: "is_project_lead", 
-        label: "Devenir porteur de projet ?", 
-        type: "radio", 
+        name: "is_project_lead", label: "Devenir porteur de projet ?", type: "radio", required: true,
         options: ["Oui", "Non", "Peut-être"] 
       },
       { 
-        name: "project_domain", 
-        label: "Si oui, quel domaine ?", 
-        type: "select", 
-        options: ["Digital", "Éducation", "Santé", "Social", "Business", "Autre (N/A)"] 
+        name: "project_domain", label: "Si oui, quel domaine ?", type: "select", required: false,
+        options: ["Digital", "Éducation", "Santé", "Social", "Business", "Autre"] 
       },
       {
-        name: "project_needs",
-        label: "Besoin principal",
-        type: "select",
-        options: ["Mentorat", "Formation", "Mise en réseau", "Partenaires", "Hackathons", "N/A"]
+        name: "project_needs", label: "Besoin principal", type: "select", required: false,
+        options: ["Mentorat", "Formation", "Mise en réseau", "Partenaires", "Hackathons"]
       }
     ]
   },
@@ -188,15 +141,11 @@ export const wizardConfig: Slide[] = [
     description: "Competition w Challenge.",
     fields: [
       { 
-        name: "hackathon_interest", 
-        label: "Intérêt pour les hackathons", 
-        type: "radio", 
+        name: "hackathon_interest", label: "Intérêt pour les hackathons", type: "radio", required: true,
         options: ["Très élevé", "Moyen", "Faible", "Aucun"] 
       },
       { 
-        name: "hackathon_goal", 
-        label: "Votre objectif principal", 
-        type: "select", 
+        name: "hackathon_goal", label: "Votre objectif principal", type: "select", required: false,
         options: ["Participer", "Coaching/Accompagnement", "Organiser", "Valoriser les prix"] 
       }
     ]
@@ -209,15 +158,11 @@ export const wizardConfig: Slide[] = [
     description: "Wach had l pôle mzyan lik?",
     fields: [
       { 
-        name: "law_relevance", 
-        label: "Pertinence du pôle", 
-        type: "radio", 
+        name: "law_relevance", label: "Pertinence du pôle", type: "radio", required: true,
         options: ["Très pertinente", "Pertinente", "Peu pertinente", "Inutile"] 
       },
       { 
-        name: "law_topic", 
-        label: "Sujet intéressant", 
-        type: "select", 
+        name: "law_topic", label: "Sujet intéressant", type: "select", required: false,
         options: ["Droit des entreprises", "Statuts & Création", "Propriété intellectuelle", "Droit du travail", "Réglementation digitale"] 
       }
     ]
@@ -230,23 +175,15 @@ export const wizardConfig: Slide[] = [
     description: "Kifach n-amélioriw l'image dyalna?",
     fields: [
       { 
-        name: "com_channel", 
-        label: "Canal à renforcer", 
-        type: "radio", 
+        name: "com_channel", label: "Canal à renforcer", type: "radio", required: true,
         options: ["Instagram", "TikTok", "LinkedIn", "Événements physiques", "Médias"] 
       },
       { 
-        name: "com_rating", 
-        label: "Note visibilité (1-5)", 
-        type: "radio", 
+        name: "com_rating", label: "Note visibilité (1-5)", type: "radio", required: true,
         options: ["1 - Faible", "2", "3", "4", "5 - Top"] 
       },
       { 
-        name: "com_suggestions", 
-        label: "Suggestions d’amélioration", 
-        type: "textarea",
-        placeholder: "Votre avis compte..."
-      }
+        name: "com_suggestions", label: "Suggestions d’amélioration", type: "textarea", placeholder: "Votre avis compte...", required: false }
     ]
   },
 
@@ -257,15 +194,11 @@ export const wizardConfig: Slide[] = [
     description: "L'impact social dyal le club.",
     fields: [
       { 
-        name: "social_type", 
-        label: "Type d'activité", 
-        type: "select", 
+        name: "social_type", label: "Type d'activité", type: "select", required: true,
         options: ["Actions solidaires", "Sensibilisation locale", "Volontariat", "Team building"] 
       },
       { 
-        name: "social_freq", 
-        label: "Fréquence idéale", 
-        type: "radio", 
+        name: "social_freq", label: "Fréquence idéale", type: "radio", required: true,
         options: ["Mensuelle", "Trimestrielle", "Ponctuelle"] 
       }
     ]
@@ -277,18 +210,8 @@ export const wizardConfig: Slide[] = [
     title: "Idées & Feedback",
     description: "L'espace dyalk l-libre.",
     fields: [
-      { 
-        name: "new_ideas", 
-        label: "Nouvelles idées pour 2026", 
-        type: "textarea",
-        placeholder: "Proposez vos idées ici..."
-      },
-      { 
-        name: "general_feedback", 
-        label: "Recommandations générales", 
-        type: "textarea",
-        placeholder: "Critiques, attentes, propositions..."
-      }
+      { name: "new_ideas", label: "Nouvelles idées pour 2026", type: "textarea", placeholder: "Proposez vos idées ici...", required: false },
+      { name: "general_feedback", label: "Recommandations générales", type: "textarea", placeholder: "Critiques, attentes, propositions...", required: false }
     ]
   },
 
@@ -299,29 +222,19 @@ export const wizardConfig: Slide[] = [
     description: "Bghiti tkon membre actif?",
     fields: [
       { 
-        name: "future_implication", 
-        label: "Implication active en 2026 ?", 
-        type: "radio", 
+        name: "future_implication", label: "Implication active en 2026 ?", type: "radio", required: true,
         options: ["Oui", "Non", "Selon les projets"] 
       },
       { 
-        name: "join_team", 
-        label: "Rejoindre la TEAM CMO ?", 
-        type: "radio", 
+        name: "join_team", label: "Rejoindre la TEAM CMO ?", type: "radio", required: true,
         options: ["Oui", "Non"] 
       },
       { 
-        name: "team_role", 
-        label: "Si oui, quel pôle ?", 
-        type: "select", 
-        options: ["MANAGEMENT", "MEDIA", "SOCIAL MEDIA", "EDITING", "RELATIONSHIP", "MARKETING", "EVENT", "FORMATION", "TECH / DIGITAL", "N/A"] 
+        name: "team_role", label: "Si oui, quel pôle ?", type: "select", required: false,
+        options: ["MANAGEMENT", "MEDIA", "SOCIAL MEDIA", "EDITING", "RELATIONSHIP", "MARKETING", "EVENT", "FORMATION", "TECH / DIGITAL"] 
       },
       { 
-        name: "contact_info", 
-        label: "Numéro ou Contact (Facultatif)", 
-        type: "text", 
-        placeholder: "+212..." 
-      }
+        name: "contact_info", label: "Numéro ou Contact (Facultatif)", type: "text", placeholder: "+212...", required: false }
     ]
   }
 ];

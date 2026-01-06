@@ -1,8 +1,7 @@
-
 // src/components/WizardForm/index.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./WizardForm.module.scss";
 import { wizardConfig } from "../../data/questions";
@@ -12,24 +11,34 @@ export default function WizardForm() {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [direction, setDirection] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false); // Screen d'accueil
 
   const totalSteps = wizardConfig.length;
   const currentSlide = wizardConfig[currentStep];
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target;
-    setFormData({ ...formData, [name]: value });
+  // Scroll to top on step change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentStep]);
 
-    if (type === 'radio' && value && currentStep < totalSteps) {
-      setTimeout(() => handleNext(), 400);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // LOGIC JDIIDA:
+    // Auto-advance ghir ila kanet so2al wa7d f page w kan type radio
+    if (type === 'radio' && currentSlide.fields.length === 1 && currentStep < totalSteps) {
+      setTimeout(() => handleNext(), 300);
     }
   };
 
   const isStepValid = () => {
     if (!currentSlide) return false;
-    return currentSlide.fields.every(
-      (field) => formData[field.name] && formData[field.name].trim() !== ''
-    );
+    // Check ghir l fields li 'required: true'
+    return currentSlide.fields.every((field) => {
+      if (!field.required) return true; // Ila machi darouri, daz
+      return formData[field.name] && formData[field.name].trim() !== '';
+    });
   };
 
   const handleNext = () => {
@@ -38,6 +47,7 @@ export default function WizardForm() {
       setCurrentStep((prev) => prev + 1);
     }
   };
+
   const handlePrev = () => {
     if (currentStep > 0) {
       setDirection(-1);
@@ -51,6 +61,7 @@ export default function WizardForm() {
     
     setIsSubmitting(true);
     try {
+      // FormSubmit ID Updated
       const response = await fetch("https://formsubmit.co/ajax/edfbd1ce307b760f636d77ff2f617eb6", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
@@ -58,29 +69,49 @@ export default function WizardForm() {
       });
 
       if (response.ok) {
-        handleNext();
+        handleNext(); // Move to success slide
       } else {
-        alert("Signal lost. Please try again.");
+        alert("Erreur de connexion. 3awed jareb.");
       }
     } catch (error) {
       console.error("Transmission Error:", error);
-      alert("A cosmic ray interfered with the transmission. Please try again.");
+      alert("Erreur technique. 3awed jareb mn be3d.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // Animation variants
   const cinematicVariants = {
-    enter: (direction: number) => ({ opacity: 0, z: -200, rotateY: direction > 0 ? 45 : -45 }),
-    center: { opacity: 1, z: 0, rotateY: 0 },
-    exit: (direction: number) => ({ opacity: 0, z: 200, rotateY: direction < 0 ? 45 : -45 }),
+    enter: (direction: number) => ({ opacity: 0, x: direction > 0 ? 50 : -50 }),
+    center: { opacity: 1, x: 0 },
+    exit: (direction: number) => ({ opacity: 0, x: direction < 0 ? 50 : -50 }),
   };
-  const textStagger = { hidden: {}, show: { transition: { staggerChildren: 0.2, delayChildren: 0.3 } } };
-  const textFadeIn = { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { type: 'spring', damping: 15, stiffness: 100 } } };
+
+  // Welcome Screen
+  if (!hasStarted) {
+    return (
+      <div className={styles.introScreen}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+          <h1>CMO48 Strategy 2026</h1>
+          <p>3awenna nrasmo l'mosta9bal dyal le club.</p>
+          <button onClick={() => setHasStarted(true)} className={styles.btnStart}>Bda L'formulaire</button>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.cinematicWrapper}>
       <div className={styles.wizardContainer}>
+        {/* Progress bar simple */}
+        <div className={styles.progressBar}>
+            <div 
+                className={styles.progressFill} 
+                style={{ width: `${((currentStep) / totalSteps) * 100}%` }} 
+            />
+        </div>
+
         <AnimatePresence initial={false} custom={direction} mode="wait">
           <motion.div
             key={currentStep}
@@ -89,52 +120,70 @@ export default function WizardForm() {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ z: { type: 'spring', stiffness: 100, damping: 15 }, rotateY: { type: 'spring', stiffness: 100, damping: 15 }, opacity: { duration: 0.4 } }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className={styles.slideContent}
           >
             {currentStep < totalSteps ? (
-              <motion.div variants={textStagger} initial="hidden" animate="show" onSubmit={handleSubmit} as="form">
-                <motion.h2 variants={textFadeIn}>{currentSlide.title}</motion.h2>
-                <motion.p variants={textFadeIn}>{currentSlide.description}</motion.p>
-                <motion.div variants={textFadeIn}>
-                  {currentSlide.fields.map((field) =>
-                    field.type === 'radio' ? (
-                      <div key={field.name} className={styles.choiceGroup}>
-                        {field.options?.map((opt) => (
-                          <div key={opt}>
-                            <input type="radio" id={`${field.name}-${opt}`} name={field.name} value={opt} onChange={handleChange} checked={formData[field.name] === opt} />
-                            <label htmlFor={`${field.name}-${opt}`} className={styles.choiceLabel}>{opt}</label>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div key={field.name} className={styles.inputWrapper}>
-                        <input type={field.type} name={field.name} placeholder={field.label} onChange={handleChange} value={formData[field.name] || ''} />
-                      </div>
-                    )
-                  )}
-                </motion.div>
+              <form onSubmit={handleSubmit}>
+                <div className={styles.header}>
+                    <span className={styles.stepIndicator}>Step {currentStep + 1}/{totalSteps}</span>
+                    <h2>{currentSlide.title}</h2>
+                    <p>{currentSlide.description}</p>
+                </div>
+
+                <div className={styles.fieldsGrid}>
+                  {currentSlide.fields.map((field) => (
+                    <div key={field.name} className={styles.fieldWrapper}>
+                        {field.type !== 'radio' && <label className={styles.fieldLabel}>{field.label} {!field.required && <span className={styles.optional}>(Optionnel)</span>}</label>}
+                        
+                        {field.type === 'radio' ? (
+                             <div className={styles.radioGroup}>
+                                <p className={styles.radioTitle}>{field.label}</p>
+                                <div className={styles.radioOptions}>
+                                    {field.options?.map((opt) => (
+                                    <label key={opt} className={`${styles.radioCard} ${formData[field.name] === opt ? styles.selected : ''}`}>
+                                        <input type="radio" name={field.name} value={opt} onChange={handleChange} checked={formData[field.name] === opt} />
+                                        <span>{opt}</span>
+                                    </label>
+                                    ))}
+                                </div>
+                             </div>
+                        ) : field.type === 'select' ? (
+                            <select name={field.name} value={formData[field.name] || ''} onChange={handleChange} className={styles.selectInput}>
+                                <option value="" disabled>Choisir une option...</option>
+                                {field.options?.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                            </select>
+                        ) : field.type === 'textarea' ? (
+                            <textarea name={field.name} placeholder={field.placeholder} value={formData[field.name] || ''} onChange={handleChange} rows={4} />
+                        ) : (
+                            <input type={field.type} name={field.name} placeholder={field.placeholder} value={formData[field.name] || ''} onChange={handleChange} />
+                        )}
+                    </div>
+                  ))}
+                </div>
                 
-                <motion.div variants={textFadeIn} className={styles.actions}>
-                  {currentStep > 0 && <button type="button" onClick={handlePrev}>Back</button>}
-                  {currentStep < totalSteps - 1 && <button type="button" onClick={handleNext} className={styles.btnPrimary} disabled={!isStepValid()}>Next</button>}
-                  {currentStep === totalSteps - 1 && <button type="submit" className={styles.btnSubmit} disabled={!isStepValid() || isSubmitting}>{isSubmitting ? 'Transmitting...' : 'Submit Inquiry'}</button>}
-                </motion.div>
-              </motion.div>
+                <div className={styles.actions}>
+                  <button type="button" onClick={handlePrev} disabled={currentStep === 0} className={styles.btnPrev}>Retour</button>
+                  
+                  {currentStep === totalSteps - 1 ? (
+                    <button type="submit" className={styles.btnSubmit} disabled={!isStepValid() || isSubmitting}>
+                        {isSubmitting ? 'Envoi...' : 'Envoyer'}
+                    </button>
+                  ) : (
+                    <button type="button" onClick={handleNext} className={styles.btnNext} disabled={!isStepValid()}>
+                        Suivant
+                    </button>
+                  )}
+                </div>
+              </form>
             ) : (
-              <motion.div variants={textStagger} initial="hidden" animate="show" className={styles.successState}>
-                <motion.h2 variants={textFadeIn}>Transmission Complete.</motion.h2>
-                <motion.p variants={textFadeIn}>Thank you. We have received your signal.</motion.p>
-              </motion.div>
+              <div className={styles.successState}>
+                <h2>Mrc a sat!</h2>
+                <p>L'feedback dyalk wselna. Nchoufouk 9rib f CMO48.</p>
+              </div>
             )}
           </motion.div>
         </AnimatePresence>
-      </div>
-
-      <div className={styles.progressPips}>
-        {Array.from({ length: totalSteps }).map((_, index) => (
-          <div key={index} className={`${styles.pip} ${index < currentStep ? styles.active : ''} ${index === currentStep ? styles.active : ''}`} />
-        ))}
       </div>
     </div>
   );
