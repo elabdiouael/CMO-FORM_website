@@ -1,0 +1,51 @@
+.group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  
+  .label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+  }
+  
+  .input {
+    background: rgba(255, 255, 255, 0.02);
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    color: #fff;
+    font-family: inherit;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+    border-radius: 8px 8px 0 0;
+  
+    &:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.05);
+      border-bottom-color: #08fdd8;
+    }
+    
+    &::placeholder { color: #333; }
+  }
+  
+  // L-Glow li kayban lta7t melli kat-focusé
+  .input:focus + .glowBar {
+    opacity: 1;
+    width: 100%;
+    box-shadow: 0 0 15px #08fdd8;
+  }
+  
+  .glowBar {
+    height: 1px;
+    width: 0%;
+    background: #08fdd8;
+    transition: all 0.4s ease;
+    margin-top: -1px;
+    opacity: 0;
+  }

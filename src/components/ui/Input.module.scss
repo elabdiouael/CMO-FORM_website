@@ -1,35 +1,39 @@
+// src/components/ui/Input.module.scss
 .group {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    position: relative;
   }
   
   .label {
-    color: #888;
-    font-size: 0.9rem;
+    color: #9ca3af;
+    font-size: 0.85rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.2px;
+    font-weight: 600;
+    margin-left: 2px;
   }
   
   .input {
     width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-    padding: 12px 0;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 16px;
     color: #fff;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-family: inherit;
-    transition: border-color 0.3s ease;
-    border-radius: 0;
-  
+    transition: all 0.3s ease;
+    
     &:focus {
       outline: none;
-      border-color: #08fdd8;
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(8, 253, 216, 0.5);
     }
   
     &::placeholder {
-      color: #444;
+      color: #4b5563;
     }
   }

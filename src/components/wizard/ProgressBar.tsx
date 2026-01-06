@@ -1,3 +1,4 @@
+// src/components/wizard/ProgressBar.tsx
 import styles from './ProgressBar.module.scss';
 
 export default function ProgressBar({ current, total }: { current: number; total: number }) {

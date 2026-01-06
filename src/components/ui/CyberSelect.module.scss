@@ -1,0 +1,98 @@
+// src/components/ui/CyberSelect.module.scss
+
+.wrapper {
+    position: relative;
+    margin-bottom: 2rem;
+    font-family: 'Space Grotesk', sans-serif;
+    // Hada howa sirr: z-index 3ali bach yban fo9 inputs li ta7to
+    z-index: 100; 
+  }
+  
+  .label {
+    display: block;
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+  }
+  
+  .trigger {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 10; // Trigger fo9
+  
+    &:hover {
+      border-color: rgba(8, 253, 216, 0.4);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    &.active {
+      border-color: #08fdd8;
+      box-shadow: 0 0 15px rgba(8, 253, 216, 0.1);
+    }
+  }
+  
+  .value { color: #fff; font-weight: 500; }
+  .placeholder { color: #444; }
+  
+  .icon {
+    color: #08fdd8;
+    transition: transform 0.3s;
+    &.rotated { transform: rotate(180deg); }
+  }
+  
+  .dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    max-height: 250px;
+    overflow-y: auto;
+    background: #0a0a0a; // Khalfiya k7la 100% bach matbayench li ta7tha
+    border: 1px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.9); // Shadow 9wi
+    padding: 6px;
+    
+    // Z-INDEX TALE3 BZAF + Isolation
+    z-index: 9999; 
+    isolation: isolate;
+  
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+  }
+  
+  .option {
+    padding: 10px 14px;
+    color: #aaa;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.2s;
+    font-size: 0.95rem;
+    position: relative;
+    z-index: 10000; // Option fo9 dropdown
+  
+    &:hover {
+      background: rgba(8, 253, 216, 0.1);
+      color: #fff;
+      padding-left: 18px;
+    }
+  
+    &.selected {
+      color: #08fdd8;
+      background: rgba(8, 253, 216, 0.05);
+    }
+  }

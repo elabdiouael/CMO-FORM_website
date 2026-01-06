@@ -1,42 +1,69 @@
+// src/components/ui/RadioCard.module.scss
 .card {
-    background: rgba(255, 255, 255, 0.03);
+    // Glassmorphism
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 1.2rem;
-    border-radius: 12px;
+    
+    padding: 1.25rem;
+    border-radius: 16px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
   
     &:hover {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.1);
       transform: translateY(-2px);
       border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
   
     &.selected {
+      background: rgba(8, 253, 216, 0.1);
       border-color: #08fdd8;
-      background: rgba(8, 253, 216, 0.05);
-      box-shadow: 0 0 20px rgba(8, 253, 216, 0.1);
+      box-shadow: 0 0 25px rgba(8, 253, 216, 0.15);
   
       .indicator {
-        background: #08fdd8;
+        border-color: #08fdd8;
         box-shadow: 0 0 10px #08fdd8;
+      }
+      
+      .text {
+        color: #fff;
+        text-shadow: 0 0 10px rgba(255,255,255,0.3);
       }
     }
   }
   
   .indicator {
-    width: 12px;
-    height: 12px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+  
+  .dot {
+    width: 10px;
+    height: 10px;
+    background-color: #08fdd8;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #08fdd8;
   }
   
   .text {
-    color: #f0f0f0;
+    color: #d1d5db;
     font-weight: 500;
     font-size: 1rem;
+    transition: color 0.3s ease;
+    line-height: 1.4;
   }

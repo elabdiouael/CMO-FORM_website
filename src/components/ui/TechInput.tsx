@@ -1,12 +1,11 @@
-// src/components/ui/Input.tsx
-import styles from './Input.module.scss';
+import styles from './TechInput.module.scss';
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label: string;
   multiline?: boolean;
 }
 
-export default function Input({ label, multiline, ...props }: Props) {
+export default function TechInput({ label, multiline, ...props }: Props) {
   return (
     <div className={styles.group}>
       <label className={styles.label}>{label}</label>
@@ -15,7 +14,7 @@ export default function Input({ label, multiline, ...props }: Props) {
       ) : (
         <input className={styles.input} {...props} />
       )}
-      <div className={styles.bar}></div>
+      <div className={styles.glowBar} />
     </div>
   );
 }

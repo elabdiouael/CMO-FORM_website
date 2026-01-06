@@ -1,76 +1,102 @@
-.slideContainer {
-    width: 100%;
+// INTRO
+.intro {
+    text-align: center;
+    p { color: #888; letter-spacing: 4px; margin-bottom: 2rem; font-size: 0.8rem; }
   }
   
-  .title {
-    font-size: 2.5rem;
-    font-weight: 700;
+  .glitch {
+    font-size: 5rem;
+    font-weight: 900;
     color: #fff;
-    margin-bottom: 0.5rem;
+    position: relative;
+    letter-spacing: -2px;
+    margin-bottom: 1rem;
+    
+    &::before, &::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #030303;
+    }
+    &::before {
+      left: 2px; text-shadow: -1px 0 #ff00c1;
+      clip-path: inset(0 0 0 0);
+      animation: glitch-anim 3s infinite linear alternate-reverse;
+    }
+    &::after {
+      left: -2px; text-shadow: -1px 0 #00fff9;
+      clip-path: inset(0 0 0 0);
+      animation: glitch-anim2 3s infinite linear alternate-reverse;
+    }
   }
   
-  .desc {
-    color: #aaa;
-    font-size: 1.1rem;
-    margin-bottom: 2.5rem;
+  @keyframes glitch-anim {
+    0% { clip-path: inset(10% 0 80% 0); }
+    20% { clip-path: inset(80% 0 5% 0); }
+    100% { clip-path: inset(40% 0 40% 0); }
   }
   
-  .radioGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  
-  .selectWrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 1.5rem;
-      
-      label { color: #888; font-size: 0.9rem; text-transform: uppercase; }
-      select {
-          background: #1a1a1a;
-          border: 1px solid #333;
-          padding: 12px;
-          color: white;
-          border-radius: 8px;
-          font-size: 1rem;
-          width: 100%;
-      }
-  }
-  
-  .actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 3rem;
-  }
-  
-  .btnPri, .btnSec {
-    padding: 12px 32px;
-    border-radius: 100px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  
-  .btnPri {
-    background: #08fdd8;
-    color: #000;
-    border: none;
-    &:disabled { opacity: 0.5; cursor: not-allowed; }
-    &:hover:not(:disabled) { box-shadow: 0 0 15px rgba(8, 253, 216, 0.4); }
-  }
-  
-  .btnSec {
+  .btnStart {
     background: transparent;
-    color: #fff;
-    border: 1px solid #333;
-    &:disabled { opacity: 0; pointer-events: none; }
-    &:hover { border-color: #fff; }
+    color: #08fdd8;
+    border: 1px solid #08fdd8;
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: 0.3s;
+    &:hover { background: rgba(8, 253, 216, 0.1); box-shadow: 0 0 20px rgba(8, 253, 216, 0.3); }
   }
   
-  .success {
-      text-align: center;
-      h2 { font-size: 3rem; color: #08fdd8; }
+  // WIZARD
+  .progress {
+    height: 2px;
+    background: rgba(255,255,255,0.1);
+    margin-bottom: 2rem;
+    .bar { height: 100%; background: #08fdd8; box-shadow: 0 0 10px #08fdd8; transition: width 0.5s ease; }
   }
+  
+  .header {
+    margin-bottom: 2rem;
+    .stepNum { color: #08fdd8; font-family: monospace; }
+    h2 { font-size: 2.5rem; color: #fff; margin: 0.5rem 0; line-height: 1; }
+    p { color: #888; }
+  }
+  
+  // RADIO GRID
+  .radioGroup { margin-bottom: 2rem; }
+  .radioLabel { display: block; color: #6b7280; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 1rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+  
+  .radioCard {
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.02);
+    padding: 1.5rem;
+    text-align: center;
+    color: #aaa;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 8px;
+  
+    &:hover { border-color: rgba(8, 253, 216, 0.5); color: #fff; transform: translateY(-2px); }
+    &.selected { background: rgba(8, 253, 216, 0.1); border-color: #08fdd8; color: #fff; box-shadow: 0 0 15px rgba(8, 253, 216, 0.15); }
+  }
+  
+  // BUTTONS
+  .actions {
+    display: flex; justify-content: space-between; margin-top: 3rem;
+    button { font-family: 'Space Grotesk', sans-serif; cursor: pointer; border: none; font-weight: 700; letter-spacing: 1px; }
+  }
+  .btnPri {
+    background: #08fdd8; color: #000; padding: 14px 32px;
+    clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+    transition: 0.3s;
+    &:disabled { opacity: 0.3; cursor: not-allowed; }
+    &:hover:not(:disabled) { filter: brightness(1.2); box-shadow: 0 0 20px rgba(8,253,216,0.4); }
+  }
+  .btnSec {
+    background: transparent; color: #555;
+    &:hover { color: #fff; }
+  }
+  
+  .success { text-align: center; padding: 4rem 0; h1 { color: #08fdd8; margin-bottom: 1rem; } }

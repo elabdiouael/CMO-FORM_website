@@ -1,0 +1,327 @@
+// src/components/wizard/WizardCore.module.scss
+
+// --- VARIABLES & THEME ---
+$neon-cyan: #08fdd8;
+$neon-purple: #b026ff;
+$neon-red: #ff2a2a;
+$bg-glass: rgba(5, 5, 10, 0.6); // Darker glass for better contrast
+$border-glass: rgba(255, 255, 255, 0.1);
+
+// --- KEYFRAMES ANIMATIONS ---
+
+// 1. Glitch Effect (Title)
+@keyframes glitch-skew {
+  0% { transform: skew(0deg); }
+  20% { transform: skew(-2deg); }
+  40% { transform: skew(2deg); }
+  60% { transform: skew(-1deg); }
+  80% { transform: skew(1deg); }
+  100% { transform: skew(0deg); }
+}
+
+// 2. Staggered Slide Up (Les inputs kytla3o)
+@keyframes fadeInUpCyber {
+  0% { 
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    filter: blur(5px);
+  }
+  100% { 
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+// 3. Scanline Wipe (Transition effect)
+@keyframes scanline {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 0% 100%; }
+}
+
+// --- INTRO SCREEN ---
+.intro {
+  text-align: center;
+  z-index: 10;
+  p { 
+    color: #888; 
+    letter-spacing: 4px; 
+    margin-bottom: 2rem; 
+    font-size: 0.8rem; 
+    text-transform: uppercase;
+  }
+}
+
+.glitch {
+  font-size: 5rem;
+  font-weight: 900;
+  color: #fff;
+  position: relative;
+  letter-spacing: -2px;
+  margin-bottom: 1rem;
+  animation: glitch-skew 3s infinite linear alternate-reverse;
+  
+  &::before, &::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #000;
+  }
+  &::before {
+    left: 2px; text-shadow: -2px 0 $neon-purple;
+    clip-path: inset(0 0 0 0);
+  }
+  &::after {
+    left: -2px; text-shadow: -2px 0 $neon-cyan;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.btnStart {
+  background: transparent;
+  color: $neon-cyan;
+  border: 1px solid $neon-cyan;
+  padding: 1rem 3rem;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    background: rgba(8, 253, 216, 0.1);
+    box-shadow: 0 0 30px rgba(8, 253, 216, 0.4);
+    letter-spacing: 4px; // Text expand effect
+  }
+}
+
+// --- WIZARD CONTAINER ---
+
+.slide {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+}
+
+// Progress Bar
+.progress {
+  height: 2px;
+  background: rgba(255,255,255,0.1);
+  margin-bottom: 2rem;
+  width: 100%;
+  position: relative;
+  
+  .bar { 
+    height: 100%; 
+    background: $neon-cyan; 
+    box-shadow: 0 0 10px $neon-cyan; 
+    transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+    
+    // Glowing Tip
+    &::after {
+      content: '';
+      position: absolute;
+      right: 0; top: -2px;
+      width: 6px; height: 6px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #fff;
+    }
+  }
+}
+
+// Header Section
+.header {
+  margin-bottom: 2rem;
+  
+  .stepNum { 
+    color: $neon-cyan; 
+    font-family: monospace; 
+    font-size: 0.9rem; 
+    margin-bottom: 0.5rem; 
+    display: block;
+    opacity: 0.8;
+  }
+  
+  h2 { 
+    font-size: 2.5rem; 
+    color: #fff; 
+    margin: 0.5rem 0; 
+    line-height: 1.1; 
+    font-weight: 800;
+    // Shadow bach tban ktba bayna
+    text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+  }
+  
+  p { 
+    color: #ccc; 
+    font-size: 1.1rem;
+    max-width: 90%;
+  }
+}
+
+// Form Fields Container
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: auto; // Push actions to bottom
+  
+  // --- MAGIC ANIMATION HNA ---
+  // Kola field ghadi yban b retard (Staggered)
+  & > div {
+    animation: fadeInUpCyber 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  }
+  
+  & > div:nth-child(1) { animation-delay: 0.1s; }
+  & > div:nth-child(2) { animation-delay: 0.2s; }
+  & > div:nth-child(3) { animation-delay: 0.3s; }
+  & > div:nth-child(4) { animation-delay: 0.4s; }
+}
+
+// Radio Cards (Selection)
+.radioGroup {
+  margin-bottom: 1rem;
+}
+
+.radioLabel { 
+  display: block; 
+  color: #888; 
+  font-size: 0.75rem; 
+  text-transform: uppercase; 
+  letter-spacing: 2px; 
+  font-weight: 700; 
+  margin-bottom: 1rem; 
+}
+
+.grid { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
+  gap: 1rem; 
+}
+
+.radioCard {
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0, 0, 0, 0.4); // Darker background for contrast
+  padding: 1.5rem;
+  text-align: center;
+  color: #bbb; // Brighter grey
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-radius: 12px;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+
+  &:hover { 
+    border-color: $neon-cyan; 
+    color: #fff; 
+    transform: translateY(-3px);
+    background: rgba(255,255,255,0.05);
+  }
+  
+  &.selected { 
+    background: rgba(8, 253, 216, 0.1); 
+    border-color: $neon-cyan; 
+    color: #fff; 
+    box-shadow: 0 0 20px rgba(8, 253, 216, 0.2); 
+    
+    // Corner accent
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 0; height: 0;
+      border-style: solid;
+      border-width: 0 15px 15px 0;
+      border-color: transparent $neon-cyan transparent transparent;
+    }
+  }
+}
+
+// Action Buttons (Sticky Footer)
+.actions {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  
+  button { 
+    font-family: inherit; 
+    cursor: pointer; 
+    border: none; 
+    font-weight: 700; 
+    letter-spacing: 1px; 
+    text-transform: uppercase;
+  }
+}
+
+.btnPri {
+  background: $neon-cyan; 
+  color: #000; 
+  padding: 14px 40px;
+  border-radius: 4px;
+  transition: 0.3s;
+  position: relative;
+  z-index: 1;
+  
+  // Cyberpunk corner cut
+  clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+
+  &:disabled { 
+    opacity: 0.5; 
+    cursor: not-allowed; 
+    filter: grayscale(100%);
+  }
+  
+  &:hover:not(:disabled) { 
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(8,253,216,0.5); 
+    background: #fff;
+  }
+}
+
+.btnSec {
+  background: transparent; 
+  color: #666;
+  font-size: 0.9rem;
+  padding: 10px 20px;
+  transition: 0.3s;
+  
+  &:hover { 
+    color: #fff; 
+    text-shadow: 0 0 10px #fff;
+  }
+  &:disabled { opacity: 0; pointer-events: none; }
+}
+
+// Success State
+.success { 
+  text-align: center; 
+  padding: 4rem 0; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  
+  h1 { 
+    font-size: 3rem;
+    color: $neon-cyan; 
+    margin-bottom: 1rem; 
+    text-shadow: 0 0 20px rgba(8, 253, 216, 0.4);
+  }
+  
+  p {
+    color: #ccc;
+    font-size: 1.2rem;
+  }
+}

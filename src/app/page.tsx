@@ -1,5 +1,6 @@
-import WizardLogic from "../components/wizard/WizardLogic";
+// src/app/page.tsx
+import WizardCore from "../components/wizard/WizardCore";
 
 export default function Home() {
-  return <WizardLogic />;
+  return <WizardCore />;
 }

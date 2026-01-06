@@ -1,0 +1,117 @@
+// src/components/layout/HoloCard.module.scss
+
+.perspectiveContainer {
+    perspective: 1200px;
+    width: 100%;
+    max-width: 700px; // Zedt f l-3erd chwiya
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh; // Bach yji m-centré
+  }
+  
+  .glassCard {
+    position: relative;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    transform: translateZ(20px);
+    transition: all 0.5s ease;
+    
+    // Height fixe bach l-scroll ykhdm l-dakhel
+    height: 85vh; 
+    max-height: 800px;
+    
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(16px); // N9essna l-blur bach tban n9iya
+    -webkit-backdrop-filter: blur(16px);
+  
+    // --- VARIANT 1: HOLO (Cyan/Teal) - Rje3nah Dark Classy ---
+    &.holo {
+      background: rgba(5, 10, 10, 0.85); // Zidna l-k7ouliya
+      border: 1px solid rgba(8, 253, 216, 0.2);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); // Shadow k7el
+      .borderGlow { background: linear-gradient(180deg, rgba(8, 253, 216, 0.4), transparent); }
+    }
+  
+    // --- VARIANT 2: NEON (Purple) ---
+    &.neon {
+      background: rgba(10, 5, 15, 0.9);
+      border: 1px solid rgba(176, 38, 255, 0.3);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      .borderGlow { background: linear-gradient(180deg, rgba(176, 38, 255, 0.5), transparent); }
+    }
+  
+    // --- VARIANT 3: CRIMSON (Red) ---
+    &.crimson {
+      background: rgba(15, 0, 0, 0.9);
+      border: 1px solid rgba(255, 42, 42, 0.3);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      .borderGlow { background: linear-gradient(180deg, rgba(255, 42, 42, 0.5), transparent); }
+    }
+  
+    // --- VARIANT 4: VOID (Black/White) ---
+    &.void {
+      background: rgba(0, 0, 0, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 50px rgba(0,0,0, 0.8);
+      .borderGlow { background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent); }
+    }
+  
+    // --- VARIANT 5: SYNTHWAVE (Retro) ---
+    &.synthwave {
+      background: rgba(15, 10, 20, 0.9);
+      border: 1px solid rgba(255, 204, 0, 0.3);
+      .borderGlow { background: linear-gradient(90deg, #ff00de, #ffcc00); opacity: 0.3; }
+    }
+  }
+  
+  .scrollContent {
+    padding: 3rem 2.5rem; // Zidna padding
+    overflow-y: auto;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+  
+    // Bach buttons mayls9och lta7t
+    display: flex;
+    flex-direction: column;
+  
+    /* Custom Scrollbar (R9i9a w N9iya) */
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &::-webkit-scrollbar-thumb { 
+      background: rgba(255, 255, 255, 0.15); 
+      border-radius: 10px; 
+    }
+  }
+  
+  .scanlines {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    // N9essna l-opacity bzaaaf bach matb9ach tzerzri
+    background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.2) 50%);
+    background-size: 100% 3px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.15; // Kanet 0.5 (bzaf), rje3naha 0.15 (subtle)
+  }
+  
+  .borderGlow {
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.4;
+    mask-image: linear-gradient(to bottom, black 0%, transparent 40%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 40%);
+  }
+  
+  // Mobile responsive
+  @media (max-width: 768px) {
+    .perspectiveContainer { padding: 10px; }
+    .glassCard { height: 90vh; }
+    .scrollContent { padding: 1.5rem; }
+  }
