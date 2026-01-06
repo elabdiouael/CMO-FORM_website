@@ -10,7 +10,6 @@ import TechInput from "../ui/TechInput";
 import CyberSelect from "../ui/CyberSelect";
 import styles from "./WizardCore.module.scss";
 
-// Les styles dyal les cartes li kaytbedlo kola step
 const CARD_VARIANTS = ['holo', 'neon', 'crimson', 'void', 'synthwave'] as const;
 
 export default function WizardCore() {
@@ -19,11 +18,9 @@ export default function WizardCore() {
   const [started, setStarted] = useState(false);
   const [sending, setSending] = useState(false);
 
-  // Logic dyal Variant (Holo -> Neon -> Crimson...)
   const currentVariant = CARD_VARIANTS[step % CARD_VARIANTS.length];
   const currentSlide = wizardConfig[step];
   
-  // Handlers
   const handleChange = (name: string, val: string) => setFormData(p => ({ ...p, [name]: val }));
   
   const isValid = () => {
@@ -34,53 +31,45 @@ export default function WizardCore() {
   const next = () => step < wizardConfig.length && setStep(s => s + 1);
   const prev = () => step > 0 && setStep(s => s - 1);
 
-  // --- SUBMISSION LOGIC (CORRECTED) ---
+  // --- WEB3FORMS SUBMISSION LOGIC ---
   const handleSubmit = async () => {
     setSending(true);
-    
-    // 1. URL S7i7a (m3a smiyat l-form '/cmo')
-    const BASE_URL = "https://send.pageclip.co/cMmvHtrwAIU4nrjwl8Y5G8k7Eg34F89f";
-    const TARGET_URL = `${BASE_URL}/cmo`;
-
-    // 2. Préparation d l-FormData (Katduz 7ssen mn JSON f reseau)
-    const body = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      body.append(key, value as string);
-    });
-    // Zid date
-    body.append("submittedAt", new Date().toLocaleString());
 
     try {
-      // Mohim: Bla headers "Content-Type", browser kaydirhom rasso m3a FormData
-      const response = await fetch(TARGET_URL, {
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        body: body,
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          // 👇 Access Key dyalk mn screenshot
+          access_key: "b6e62b58-a801-4d30-b005-f141f22dbbb9",
+          ...formData,
+          subject: "Nouveau Formulaire CMO 2026", // Sujet d l-email
+          from_name: "CMO Website Form"
+        })
       });
 
-      if (response.ok) {
-        // Success: Drebha b wa7ed 2 secondes dyl suspense 3ad daz
+      const result = await response.json();
+
+      if (result.success) {
         setTimeout(() => { 
           setSending(false); 
           next(); 
         }, 1500);
       } else {
-        // Fallback: Ila ma daztch b '/cmo', jreb URL l-assliya
-        console.warn("Retrying base URL...");
-        const retry = await fetch(BASE_URL, { method: "POST", body: body });
-        if(retry.ok) {
-           setTimeout(() => { setSending(false); next(); }, 1500);
-        } else {
-           throw new Error("Failed to send");
-        }
+        console.error("Web3Forms Error:", result);
+        alert("Erreur: " + (result.message || "Impossible d'envoyer."));
+        setSending(false);
       }
     } catch (error) {
       console.error(error);
-      alert("Erreur de connexion. Jreb mrra khra (Check Console).");
+      alert("Erreur de connexion.");
       setSending(false);
     }
   };
 
-  // --- 1. INTRO SCREEN ---
   if(!started) {
     return (
       <GalaxyBackground>
@@ -95,12 +84,9 @@ export default function WizardCore() {
     );
   }
 
-  // --- 2. MAIN WIZARD ---
   return (
     <GalaxyBackground>
       <HoloCard variant={currentVariant}>
-        
-        {/* Progress Bar */}
         <div className={styles.progress}>
            <div className={styles.bar} style={{ width: `${((step + 1)/wizardConfig.length)*100}%` }} />
         </div>
@@ -109,7 +95,6 @@ export default function WizardCore() {
           {step < wizardConfig.length ? (
             <motion.div
               key={step}
-              // Animation d'entrée : Flou -> Net + Glissement
               initial={{ opacity: 0, x: 20, filter: 'blur(10px)' }}
               animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
               exit={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
@@ -126,7 +111,6 @@ export default function WizardCore() {
                 {currentSlide.fields.map(field => (
                   <div key={field.name}>
                     {
-                    // --- SELECT CUSTOM ---
                     field.type === 'select' ? (
                       <CyberSelect 
                         label={field.label}
@@ -135,7 +119,6 @@ export default function WizardCore() {
                         onChange={(val) => handleChange(field.name, val)}
                       />
                     ) : 
-                    // --- RADIO CUSTOM ---
                     field.type === 'radio' ? (
                       <div className={styles.radioGroup}>
                          <label className={styles.radioLabel}>{field.label}</label>
@@ -146,7 +129,6 @@ export default function WizardCore() {
                                  className={`${styles.radioCard} ${formData[field.name] === opt ? styles.selected : ''}`}
                                  onClick={() => {
                                     handleChange(field.name, opt);
-                                    // Auto-next ghir ila kan soal wa7d
                                     if(currentSlide.fields.length === 1 && !sending) {
                                       setTimeout(next, 400);
                                     }
@@ -158,7 +140,6 @@ export default function WizardCore() {
                          </div>
                       </div>
                     ) : (
-                    // --- INPUTS TEXT/EMAIL ---
                       <TechInput 
                         label={field.label}
                         name={field.name}
@@ -173,7 +154,6 @@ export default function WizardCore() {
 
               <div className={styles.actions}>
                  <button onClick={prev} disabled={step === 0} className={styles.btnSec}>BACK</button>
-                 
                  {step === wizardConfig.length - 1 ? (
                     <button onClick={handleSubmit} disabled={!isValid() || sending} className={styles.btnPri}>
                       {sending ? 'UPLOADING...' : 'TRANSMIT DATA'}
@@ -184,14 +164,10 @@ export default function WizardCore() {
               </div>
             </motion.div>
           ) : (
-            // --- SUCCESS SCREEN ---
             <div className={styles.success}>
-               <motion.div 
-                 initial={{ scale: 0.8, opacity: 0 }}
-                 animate={{ scale: 1, opacity: 1 }}
-               >
+               <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
                  <h1>TRANSMISSION COMPLETE</h1>
-                 <p>DATA SECURED IN THE CLOUD.</p>
+                 <p>Check your email for confirmation.</p>
                </motion.div>
             </div>
           )}
